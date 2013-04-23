@@ -3,53 +3,127 @@ var assert = require('assert'),
   request = require('request'),
   sinon = require('sinon');
 
-  describe('go-tadaa', function() {
-    describe('#_getJson()', function() {
-      beforeEach(function() {
-      });
+describe('go-tadaa', function() {
+  describe('#_getJson()', function() {
 
-      afterEach(function() {
-        request.get.restore();
-      });
+    beforeEach(function() {
+      sinon.stub(console, 'error');
+    });
 
-      it('should call request with correct values', function(done) {
-        sinon.stub(request, 'get').yields();
-        gotadaa._getJson('USER', 'PASSWORD', 'URL', function(e, json) {
-          assert(request.get.calledOnce);
-          var auth = "Basic " + new Buffer('USER:PASSWORD').toString("base64");
-          assert.deepEqual(request.get.args[0][0], { url: 'URL', headers: { "Authorization": auth } });
-          done(e);
+    afterEach(function() {
+      console.error.restore();
+      request.get.restore();
+    });
+
+    it('should call request with correct values', function(done) {
+      sinon.stub(request, 'get').yields();
+      gotadaa._getJson('USER', 'PASSWORD', 'URL', function(e, json) {
+        assert(request.get.calledOnce);
+        var auth = "Basic " + new Buffer('USER:PASSWORD').toString("base64");
+        assert.deepEqual(request.get.args[0][0], {
+          url: 'URL',
+          headers: {
+            "Authorization": auth
+          }
         });
-      });
-
-      it('should return correct json', function(done) {
-        var xml = '<Projects><Project name="NAME" lastBuildStatus="SUCCESS" lastBuildTime="2013-03-22T15:31:43"/><Project name="NAME2" lastBuildStatus="SUCCESS" lastBuildTime="2013-03-22T15:31:42"/></Projects>';
-        sinon.stub(request, 'get').yields(null, null, xml);
-        gotadaa._getJson('USER', 'PASSWORD', 'URL', function(e, json) {
-          var expectedJson = {projects:{project:[{name:"NAME", lastbuildstatus:"SUCCESS", lastbuildtime:"2013-03-22T15:31:43"}, {name:"NAME2", lastbuildstatus:"SUCCESS", lastbuildtime:"2013-03-22T15:31:42"}]}};
-          assert.deepEqual(json, expectedJson);
-          done(e);
-        });
-      });
-
-      it('should return error if request errors', function() {
-        sinon.stub(request, 'get').yields('ERROR');
-        gotadaa._getJson('USER', 'PASSWORD', 'URL', function(e) {
-          assert.equal(e, 'ERROR');
-        });
+        done(e);
       });
     });
 
-    describe('#_getFailedProjects()', function() {
-      beforeEach(function() {
+    it('should return correct json', function(done) {
+      var xml = '<Projects><Project name="NAME" lastBuildStatus="SUCCESS" lastBuildTime="2013-03-22T15:31:43"/><Project name="NAME2" lastBuildStatus="SUCCESS" lastBuildTime="2013-03-22T15:31:42"/></Projects>';
+      sinon.stub(request, 'get').yields(null, null, xml);
+      gotadaa._getJson('USER', 'PASSWORD', 'URL', function(e, json) {
+        var expectedJson = {
+          projects: {
+            project: [{
+              name: "NAME",
+              lastbuildstatus: "SUCCESS",
+              lastbuildtime: "2013-03-22T15:31:43"
+            }, {
+              name: "NAME2",
+              lastbuildstatus: "SUCCESS",
+              lastbuildtime: "2013-03-22T15:31:42"
+            }]
+          }
+        };
+        assert.deepEqual(json, expectedJson);
+        done(e);
       });
+    });
 
-      afterEach(function() {
-      });
-
-      it.skip('should return failed projects', function() {
-        var projects = {};
-        var result = gotadaa._getFailedProjects(projects, 'name', 0)
+    it('should return error if request errors', function() {
+      sinon.stub(request, 'get').yields('ERROR');
+      gotadaa._getJson('USER', 'PASSWORD', 'URL', function(e) {
+        assert.equal(e, 'ERROR');
       });
     });
   });
+
+  describe('#_getFailedProjects()', function() {
+    beforeEach(function() {
+      sinon.stub(console, 'error');
+    });
+
+    afterEach(function() {
+      console.error.restore();
+    });
+
+    it('should return failed projects', function() {
+      var projects = {
+        projects: {
+          project: [{
+            name: "proj1",
+            lastbuildtime: "2013-03-22T15:33:11",
+            lastbuildstatus: "Failed"
+          }, {
+            name: "proj2",
+            lastbuildtime: "2013-03-22T15:33:11",
+            lastbuildstatus: "Success"
+          }]
+        }
+      };
+
+      var result = gotadaa._getFailedProjects(projects, 'proj', 0);
+      assert.equal(result.length, 1);
+    });
+
+    it('should only return projects built after last check', function() {
+      var projects = {
+        projects: {
+          project: [{
+            name: "proj1",
+            lastbuildtime: "2013-03-22T15:33:11",
+            lastbuildstatus: "Failed"
+          }, {
+            name: "proj2",
+            lastbuildtime: "2013-03-22T15:42:11",
+            lastbuildstatus: "Failed"
+          }]
+        }
+      };
+
+      var result = gotadaa._getFailedProjects(projects, 'proj', 1363966391001);
+      assert.equal(result.length, 1);
+    });
+
+    it('should only return projects starting with correct name', function() {
+      var projects = {
+        projects: {
+          project: [{
+            name: "proj1",
+            lastbuildtime: "2013-03-22T15:33:11",
+            lastbuildstatus: "Failed"
+          }, {
+            name: "notproj2",
+            lastbuildtime: "2013-03-22T15:42:11",
+            lastbuildstatus: "Failed"
+          }]
+        }
+      };
+
+      var result = gotadaa._getFailedProjects(projects, 'proj', 0);
+      assert.equal(result.length, 1);
+    });
+  });
+});

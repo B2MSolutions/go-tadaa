@@ -17,16 +17,22 @@ gotadaa._getJson = function(username, password, url, done) {
     }
   },
   function(error, response, body) {
+    if (error) {
+      console.error(error);
+      return done(error);
+    }
+
     var json = {};
     if(body) {
       json = xml2json.parser(body);
     }
 
-    done(error, json);
+    return done(null, json);
   });
 }
 
 gotadaa._getFailedProjects = function(allProjects, projectNameStartsWith, lastCheckTime) {
+  // console.log(JSON.stringify(allProjects));
   var projects = _.values(allProjects)[0].project;
   var required = _.filter(projects, function(p) { return S(p.name).startsWith(projectNameStartsWith); });
   var changedSinceLastCheck = _.filter(required, function(p) { return Date.parse(p.lastbuildtime) > lastCheckTime });
