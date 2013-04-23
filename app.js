@@ -2,9 +2,9 @@ var gotadaa = require('./go-tadaa'),
   tadaa = require('tadaa');
 
 var interval = 60000;
-var up = 'up.wav'; 
-var down = 'down.wav'; 
-var audioPlayer = 'aplay' 
+var up = 'up.ogg'; 
+var down = 'down.ogg'; 
+var audioPlayer = 'ogg123' 
 
 var getValueOptions = {
   username: process.argv[2],
