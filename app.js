@@ -1,7 +1,7 @@
 var gotadaa = require('./go-tadaa'),
   tadaa = require('tadaa');
 
-var interval = 10000;
+var interval = 60000;
 var up = 'up.wav'; 
 var down = 'down.wav'; 
 var audioPlayer = 'aplay' 
