@@ -126,4 +126,27 @@ describe('go-tadaa', function() {
       assert.equal(result.length, 1);
     });
   });
+
+  describe('#getNumberOfFailures()', function() {
+    beforeEach(function() {
+      sinon.stub(console, 'error');
+      sinon.stub(console, 'log');
+    });
+
+    afterEach(function() {
+      console.error.restore();
+      console.log.restore();
+      request.get.restore();
+    });
+
+    it('should return correct number of failed projects', function(done) {
+      var xml = '<Projects><Project name="PROJECT1" lastBuildStatus="Success" lastBuildTime="2013-03-22T15:31:43"/><Project name="PROJECT2" lastBuildStatus="Fail" lastBuildTime="2013-03-22T15:31:42"/></Projects>';
+      sinon.stub(request, 'get').yields(null, null, xml);
+
+      gotadaa.getNumberOfFailures({ username: 'USER', password: 'PASSWORD', url: 'URL', project: 'PROJECT'}, function(e, result) {
+        assert.equal(result, 1);
+        done();
+      });
+    });
+  });
 });
