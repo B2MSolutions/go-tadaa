@@ -88,7 +88,7 @@ describe('go-tadaa', function() {
       assert.equal(result.length, 1);
     });
 
-    it('should only return projects built after last check', function() {
+    it('should return all projects regardless of last built time', function() {
       var projects = {
         projects: {
           project: [{
@@ -104,7 +104,7 @@ describe('go-tadaa', function() {
       };
 
       var result = gotadaa._getFailedProjects(projects, 'proj', 1363966391001);
-      assert.equal(result.length, 1);
+      assert.equal(result.length, 2);
     });
 
     it('should only return projects starting with correct name', function() {
