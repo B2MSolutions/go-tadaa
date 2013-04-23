@@ -33,7 +33,7 @@ gotadaa._getFailedProjects = function(allProjects, projectNameStartsWith) {
   // console.log(JSON.stringify(allProjects));
   var projects = _.values(allProjects)[0].project;
   var required = _.filter(projects, function(p) { return S(p.name).startsWith(projectNameStartsWith); });
-  var failed = _.filter(required, function(p) { return p.lastbuildstatus != 'Success'} );
+  var failed = _.filter(required, function(p) { return p.lastbuildstatus == 'Failed'} );
   return failed;
 };
 

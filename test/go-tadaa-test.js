@@ -80,6 +80,10 @@ describe('go-tadaa', function() {
             name: "proj2",
             lastbuildtime: "2013-03-22T15:33:11",
             lastbuildstatus: "Success"
+          }, {
+            name: "proj3",
+            lastbuildtime: "2013-03-22T15:33:11",
+            lastbuildstatus: "Building"
           }]
         }
       };
@@ -140,7 +144,7 @@ describe('go-tadaa', function() {
     });
 
     it('should return correct number of failed projects', function(done) {
-      var xml = '<Projects><Project name="PROJECT1" lastBuildStatus="Success" lastBuildTime="2013-03-22T15:31:43"/><Project name="PROJECT2" lastBuildStatus="Fail" lastBuildTime="2013-03-22T15:31:42"/></Projects>';
+      var xml = '<Projects><Project name="PROJECT1" lastBuildStatus="Success" lastBuildTime="2013-03-22T15:31:43"/><Project name="PROJECT2" lastBuildStatus="Failed" lastBuildTime="2013-03-22T15:31:42"/></Projects>';
       sinon.stub(request, 'get').yields(null, null, xml);
 
       gotadaa.getNumberOfFailures({ username: 'USER', password: 'PASSWORD', url: 'URL', project: 'PROJECT'}, function(e, result) {
