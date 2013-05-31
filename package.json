@@ -10,7 +10,7 @@
     "node-xml2json": "*",
     "underscore": "*",
     "string": "*",
-    "tadaa" : "*"
+    "tadaa" : "0.1.x"
   },
   "devDependencies": {
     "assert": "*",
