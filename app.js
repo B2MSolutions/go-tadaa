@@ -4,6 +4,7 @@ var gotadaa = require('./go-tadaa'),
 var interval = 120000;
 var up = 'up.ogg'; 
 var down = 'down.ogg'; 
+var zero = 'zero.ogg'; 
 var audioPlayer = 'ogg123' 
 
 var getValueOptions = {
@@ -13,4 +14,9 @@ var getValueOptions = {
   url: process.argv[5]
 }; 
 
-tadaa.start(interval, up, down, gotadaa.getNumberOfFailures, getValueOptions, audioPlayer);
+tadaa.start(
+    interval, 
+    [{fn: tadaa.up, sound:up}, {fn: tadaa.down, sound:down}, {fn: tadaa.zero, sound:zero}], 
+    gotadaa.getNumberOfFailures, 
+    getValueOptions, 
+    audioPlayer);

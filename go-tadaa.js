@@ -6,7 +6,6 @@ xml2json = require('node-xml2json');
 var gotadaa = {};
 
 gotadaa._getJson = function(username, password, url, done) {
-  // console.log('Calling ' + url + ' with ' + username + ' : ' + password);
   var auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
   request.get({
     url: url,
@@ -16,7 +15,6 @@ gotadaa._getJson = function(username, password, url, done) {
   },
   function(error, response, body) {
     if (error) {
-      console.error(error);
       return done(error);
     }
 
@@ -27,10 +25,9 @@ gotadaa._getJson = function(username, password, url, done) {
 
     return done(null, json);
   });
-}
+};
 
 gotadaa._getFailedProjects = function(allProjects, projectNameStartsWith) {
-  // console.log(JSON.stringify(allProjects));
   var projects = _.values(allProjects)[0].project;
   var required = _.filter(projects, function(p) { return S(p.name).startsWith(projectNameStartsWith); });
   var failed = _.filter(required, function(p) { return p.lastbuildstatus == 'Failed'} );
@@ -38,13 +35,17 @@ gotadaa._getFailedProjects = function(allProjects, projectNameStartsWith) {
 };
 
 gotadaa.getNumberOfFailures = function(options, done) {
-  console.log('Checking Go server...')
+  console.log('Checking Go server...');
   gotadaa._getJson(options.username, options.password, options.url, function(e, data) {
+    if(e) {
+      console.error(e);    
+      return done(null, null);
+    }
+    
     var failed = gotadaa._getFailedProjects(data, options.project);
     console.log(failed.length + ' failing projects');
-    done(e, failed.length);
+    return done(null, failed.length);
   });
 };
 
 module.exports = gotadaa;
-
