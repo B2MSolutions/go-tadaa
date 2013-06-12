@@ -152,5 +152,14 @@ describe('go-tadaa', function() {
         done();
       });
     });
+    
+    it('should never return an error and return null result', function(done) {
+      sinon.stub(request, 'get').yields('ERROR');
+      gotadaa.getNumberOfFailures({ username: 'USER', password: 'PASSWORD', url: 'URL', project: 'PROJECT'}, function(e, result) {
+        assert.equal(e, null);
+        assert.equal(result, null);
+        done();
+      });
+    });
   });
 });
