@@ -16,7 +16,7 @@ var getValueOptions = {
 
 tadaa.start(
     interval, 
-    [{fn: tadaa.up, sound:up}, {fn: tadaa.down, sound:down}, {fn: tadaa.zero, sound:zero}], 
+    [{fn: tadaa.up, sound:up}, {fn: tadaa.down, sound:down}, {fn: tadaa.dropToZero, sound:zero}], 
     gotadaa.getNumberOfFailures, 
     getValueOptions, 
     audioPlayer);
