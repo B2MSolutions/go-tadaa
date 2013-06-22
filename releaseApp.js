@@ -2,8 +2,6 @@ var gotadaa = require('./go-tadaa'),
   tadaa = require('tadaa');
 
 var interval = 120000;
-var release = 'release.ogg';
-var audioPlayer = 'ogg123' 
 
 var releasesGetValueOptions = {
   username: process.argv[2],
@@ -12,9 +10,12 @@ var releasesGetValueOptions = {
   url: process.argv[5]
 }; 
 
+var sound = process.argv[6] || 'release.ogg';
+var player = process.argv[7] || 'ogg123';
+  
 tadaa.start(
     interval, 
-    [{fn: tadaa.up, sound:release}], 
+    [{fn: tadaa.up, sound:sound}], 
     gotadaa.getLastBuildNumber, 
     releasesGetValueOptions, 
-    audioPlayer);
+    player);
