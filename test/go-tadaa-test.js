@@ -76,7 +76,7 @@ describe('go-tadaa', function() {
           project: [{
               name: "proj1",
               lastbuildtime: "2013-03-22T15:33:11",
-              lastbuildstatus: "Failed"
+              lastbuildstatus: "Failure"
             }, {
               name: "proj2",
               lastbuildtime: "2013-03-22T15:33:11",
@@ -100,11 +100,11 @@ describe('go-tadaa', function() {
           project: [{
               name: "proj1",
               lastbuildtime: "2013-03-22T15:33:11",
-              lastbuildstatus: "Failed"
+              lastbuildstatus: "Failure"
             }, {
               name: "proj2",
               lastbuildtime: "2013-03-22T15:42:11",
-              lastbuildstatus: "Failed"
+              lastbuildstatus: "Failure"
             }
           ]
         }
@@ -120,11 +120,11 @@ describe('go-tadaa', function() {
           project: [{
               name: "proj1",
               lastbuildtime: "2013-03-22T15:33:11",
-              lastbuildstatus: "Failed"
+              lastbuildstatus: "Failure"
             }, {
               name: "notproj2",
               lastbuildtime: "2013-03-22T15:42:11",
-              lastbuildstatus: "Failed"
+              lastbuildstatus: "Failure"
             }
           ]
         }
@@ -174,7 +174,7 @@ describe('go-tadaa', function() {
           project: [{
               name: "proj1",
               lastbuildlabel: "42",
-              lastbuildstatus: "Failed"
+              lastbuildstatus: "Failure"
             }
           ]
         }
@@ -198,7 +198,7 @@ describe('go-tadaa', function() {
     });
 
     it('should return correct number of failed projects', function(done) {
-      var xml = '<Projects><Project name="PROJECT1" lastBuildStatus="Success" lastBuildTime="2013-03-22T15:31:43"/><Project name="PROJECT2" lastBuildStatus="Failed" lastBuildTime="2013-03-22T15:31:42"/></Projects>';
+      var xml = '<Projects><Project name="PROJECT1" lastBuildStatus="Success" lastBuildTime="2013-03-22T15:31:43"/><Project name="PROJECT2" lastBuildStatus="Failure" lastBuildTime="2013-03-22T15:31:42"/></Projects>';
       sinon.stub(request, 'get').yields(null, null, xml);
 
       gotadaa.getNumberOfFailures({
