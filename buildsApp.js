@@ -5,7 +5,7 @@ var interval = 120000;
 var up = 'up.ogg'; 
 var down = 'down.ogg'; 
 var zero = 'zero.ogg'; 
-var audioPlayer = 'ogg123' 
+var audioPlayer = 'ogg123'; 
 
 var failuresGetValueOptions = {
   username: process.argv[2],

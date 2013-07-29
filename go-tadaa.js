@@ -30,7 +30,7 @@ gotadaa._getJson = function(username, password, url, done) {
 gotadaa._getFailedProjects = function(allProjects, projectNameStartsWith) {
   var projects = _.values(allProjects)[0].project;
   var required = _.filter(projects, function(p) { return S(p.name).startsWith(projectNameStartsWith); });
-  var failed = _.filter(required, function(p) { return p.lastbuildstatus == 'Failure'} );
+  var failed = _.filter(required, function(p) { return p.lastbuildstatus == 'Failure'; } );
   return failed;
 };
 
@@ -70,6 +70,6 @@ gotadaa.getLastBuildNumber = function(options, done) {
     console.log('last build number was ' + lastBuildNumber);
     return done(null, lastBuildNumber);
   });
-}
+};
 
 module.exports = gotadaa;
