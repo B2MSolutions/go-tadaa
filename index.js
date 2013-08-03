@@ -1,7 +1,7 @@
 var _ = require('underscore'),
-request = require('request'),
-S = require('string'),
-xml2json = require('node-xml2json');
+    request = require('request'),
+    S = require('string'),
+    xml2json = require('node-xml2json');
 
 var tadaago = {};
 

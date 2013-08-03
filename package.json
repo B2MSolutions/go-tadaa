@@ -1,6 +1,6 @@
 {
   "name": "tadaa-go",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "James Bloomer",
     "url": "https://github.com/jamesbloomer"
@@ -9,6 +9,7 @@
     "type": "git",
     "url": "http://github.com/jamesbloomer/tadaa-go.git" 
   },
+  "license": "MIT",
   "dependencies": {
     "request": "*",
     "node-xml2json": "*",
@@ -16,6 +17,13 @@
     "string": "*",
     "tadaa" : "0.1.1"
   },
+  "keywords" : [
+    "monitor",
+    "sounds",
+    "audio",
+    "noises",
+    "tadaa"
+  ],
   "devDependencies": {
     "assert": "*",
     "mocha": "*",

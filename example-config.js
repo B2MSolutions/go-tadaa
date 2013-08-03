@@ -1,7 +1,6 @@
 module.exports = function(tadaa) {
 
 	return {
-	{
 		"play a sound when a Go pipeline stage finishes" : {
 			"name" : "tadaa-go", 
 			"interval": 60000,
@@ -30,5 +29,5 @@ module.exports = function(tadaa) {
 				"url" : "https://my.go.server.com:8153/go/cctray.xml"
 			}
 		}
-	}
-}
+	};
+};
