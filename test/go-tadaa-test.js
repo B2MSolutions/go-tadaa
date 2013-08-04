@@ -1,5 +1,5 @@
 var assert = require('assert'),
-  gotadaa = require('../go-tadaa'),
+  tadaago = require('../index.js'),
   request = require('request'),
   sinon = require('sinon');
 
@@ -17,7 +17,7 @@ describe('go-tadaa', function() {
 
     it('should call request with correct values', function(done) {
       sinon.stub(request, 'get').yields();
-      gotadaa._getJson('USER', 'PASSWORD', 'URL', function(e, json) {
+      tadaago._getJson('USER', 'PASSWORD', 'URL', function(e, json) {
         assert(request.get.calledOnce);
         var auth = "Basic " + new Buffer('USER:PASSWORD').toString("base64");
         assert.deepEqual(request.get.args[0][0], {
@@ -33,7 +33,7 @@ describe('go-tadaa', function() {
     it('should return correct json', function(done) {
       var xml = '<Projects><Project name="NAME" lastBuildStatus="SUCCESS" lastBuildTime="2013-03-22T15:31:43"/><Project name="NAME2" lastBuildStatus="SUCCESS" lastBuildTime="2013-03-22T15:31:42"/></Projects>';
       sinon.stub(request, 'get').yields(null, null, xml);
-      gotadaa._getJson('USER', 'PASSWORD', 'URL', function(e, json) {
+      tadaago._getJson('USER', 'PASSWORD', 'URL', function(e, json) {
         var expectedJson = {
           projects: {
             project: [{
@@ -55,7 +55,7 @@ describe('go-tadaa', function() {
 
     it('should return error if request errors', function() {
       sinon.stub(request, 'get').yields('ERROR');
-      gotadaa._getJson('USER', 'PASSWORD', 'URL', function(e) {
+      tadaago._getJson('USER', 'PASSWORD', 'URL', function(e) {
         assert.equal(e, 'ERROR');
       });
     });
@@ -76,7 +76,7 @@ describe('go-tadaa', function() {
           project: [{
               name: "proj1",
               lastbuildtime: "2013-03-22T15:33:11",
-              lastbuildstatus: "Failed"
+              lastbuildstatus: "Failure"
             }, {
               name: "proj2",
               lastbuildtime: "2013-03-22T15:33:11",
@@ -90,7 +90,7 @@ describe('go-tadaa', function() {
         }
       };
 
-      var result = gotadaa._getFailedProjects(projects, 'proj', 0);
+      var result = tadaago._getFailedProjects(projects, 'proj', 0);
       assert.equal(result.length, 1);
     });
 
@@ -100,17 +100,17 @@ describe('go-tadaa', function() {
           project: [{
               name: "proj1",
               lastbuildtime: "2013-03-22T15:33:11",
-              lastbuildstatus: "Failed"
+              lastbuildstatus: "Failure"
             }, {
               name: "proj2",
               lastbuildtime: "2013-03-22T15:42:11",
-              lastbuildstatus: "Failed"
+              lastbuildstatus: "Failure"
             }
           ]
         }
       };
 
-      var result = gotadaa._getFailedProjects(projects, 'proj', 1363966391001);
+      var result = tadaago._getFailedProjects(projects, 'proj', 1363966391001);
       assert.equal(result.length, 2);
     });
 
@@ -120,17 +120,17 @@ describe('go-tadaa', function() {
           project: [{
               name: "proj1",
               lastbuildtime: "2013-03-22T15:33:11",
-              lastbuildstatus: "Failed"
+              lastbuildstatus: "Failure"
             }, {
               name: "notproj2",
               lastbuildtime: "2013-03-22T15:42:11",
-              lastbuildstatus: "Failed"
+              lastbuildstatus: "Failure"
             }
           ]
         }
       };
 
-      var result = gotadaa._getFailedProjects(projects, 'proj', 0);
+      var result = tadaago._getFailedProjects(projects, 'proj', 0);
       assert.equal(result.length, 1);
     });
   });
@@ -164,7 +164,7 @@ describe('go-tadaa', function() {
         }
       };
 
-      var result = gotadaa._getLastBuildNumber(projects, 'proj1');
+      var result = tadaago._getLastBuildNumber(projects, 'proj1');
       assert.equal(result, 42);
     });
 
@@ -174,13 +174,13 @@ describe('go-tadaa', function() {
           project: [{
               name: "proj1",
               lastbuildlabel: "42",
-              lastbuildstatus: "Failed"
+              lastbuildstatus: "Failure"
             }
           ]
         }
       };
 
-      var result = gotadaa._getLastBuildNumber(projects, 'proj1');
+      var result = tadaago._getLastBuildNumber(projects, 'proj1');
       assert.equal(result, undefined);
     });
   });
@@ -198,10 +198,10 @@ describe('go-tadaa', function() {
     });
 
     it('should return correct number of failed projects', function(done) {
-      var xml = '<Projects><Project name="PROJECT1" lastBuildStatus="Success" lastBuildTime="2013-03-22T15:31:43"/><Project name="PROJECT2" lastBuildStatus="Failed" lastBuildTime="2013-03-22T15:31:42"/></Projects>';
+      var xml = '<Projects><Project name="PROJECT1" lastBuildStatus="Success" lastBuildTime="2013-03-22T15:31:43"/><Project name="PROJECT2" lastBuildStatus="Failure" lastBuildTime="2013-03-22T15:31:42"/></Projects>';
       sinon.stub(request, 'get').yields(null, null, xml);
 
-      gotadaa.getNumberOfFailures({
+      tadaago.getNumberOfFailures({
         username: 'USER',
         password: 'PASSWORD',
         url: 'URL',
@@ -214,7 +214,7 @@ describe('go-tadaa', function() {
 
     it('should never return an error and return null result', function(done) {
       sinon.stub(request, 'get').yields('ERROR');
-      gotadaa.getNumberOfFailures({
+      tadaago.getNumberOfFailures({
         username: 'USER',
         password: 'PASSWORD',
         url: 'URL',
@@ -243,7 +243,7 @@ describe('go-tadaa', function() {
       var xml = '<Projects><Project name="PROJECT" lastBuildLabel="42" lastBuildStatus="Success"/><Project name="OTHERPROJECT" lastBuildLabel="84" lastBuildStatus="Success"/></Projects>';
       sinon.stub(request, 'get').yields(null, null, xml);
 
-      gotadaa.getLastBuildNumber({
+      tadaago.getLastBuildNumber({
         username: 'USER',
         password: 'PASSWORD',
         url: 'URL',
@@ -256,7 +256,7 @@ describe('go-tadaa', function() {
 
     it('should never return an error and return null result', function(done) {
       sinon.stub(request, 'get').yields('ERROR');
-      gotadaa.getLastBuildNumber({
+      tadaago.getLastBuildNumber({
         username: 'USER',
         password: 'PASSWORD',
         url: 'URL',
@@ -265,6 +265,24 @@ describe('go-tadaa', function() {
         assert.equal(e, null);
         assert.equal(result, null);
         done();
+      });
+    });
+  });
+
+  describe('#getValue()', function() {
+    beforeEach(function() {
+      sinon.stub(tadaago, 'getLastBuildNumber');
+    });
+
+    afterEach(function() {
+      tadaago.getLastBuildNumber.restore();
+    });
+
+    it('should default to getLastBuildNumber', function(done) {
+      tadaago.getLastBuildNumber.yields();
+      tadaago.getValue(null, function() {
+        assert(tadaago.getLastBuildNumber.calledOnce);
+        return done();
       });
     });
   });
